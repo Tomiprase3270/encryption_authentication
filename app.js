@@ -29,7 +29,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // build mongodb database with mongoose
-mongoose.connect("mongodb://localhost:27017/user", { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_CONNECT_URL, { useNewUrlParser: true });
 // mongoose.set("useCreateIndex", true);
 
 const newUserSchema = new mongoose.Schema({
@@ -205,9 +205,14 @@ app.post("/submit", (req, res) => {
 });
 
 
-app.listen(3000, (err) => {
+let port = process.env.PORT;
+if (port == null || port == "") {
+    port = 3000;
+}
+
+app.listen(port, (err) => {
     if (!err) {
-        console.log("successfully opened in port 3000");
+        console.log("successfully opened in port" + port);
     } else {
         console.log(err);
     }
