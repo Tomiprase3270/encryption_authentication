@@ -77,7 +77,8 @@ passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     // this callbackURL must registered to credential in google oauth console
-    callbackURL: 'http://localhost:3000/auth/google/secrets'
+    callbackURL: "https://secret-wordbuilder.cyclic.app"
+    // 'http://localhost:3000/auth/google/secrets'
     // "https://secretwordbuilder.herokuapp.com/auth/google/secrets"
 },
     function (accessToken, refreshToken, profile, cb) {
