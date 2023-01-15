@@ -22,13 +22,13 @@ app.use(session({
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
-    proxy: true, // Required for Heroku & Digital Ocean (regarding X-Forwarded-For)
-    name: "secretwordbuilder", // This needs to be unique per-host.
-    cookie: {
-        secure: true, // required for cookies to work on HTTPS
-        httpOnly: false,
-        sameSite: 'none'
-    }
+    // proxy: true, // Required for Heroku & Digital Ocean (regarding X-Forwarded-For)
+    // name: "secretwordbuilder", // This needs to be unique per-host.
+    // cookie: {
+    //     secure: true, // required for cookies to work on HTTPS
+    //     httpOnly: false,
+    //     sameSite: 'none'
+    // }
 }));
 
 // initialize passport
@@ -76,7 +76,9 @@ passport.deserializeUser(function (user, cb) {
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "https://secretwordbuilder.herokuapp.com/auth/google/secrets"
+    // this callbackURL must registered to credential in google oauth console
+    callbackURL: 'http://localhost:3000/auth/google/secrets'
+    // "https://secretwordbuilder.herokuapp.com/auth/google/secrets"
 },
     function (accessToken, refreshToken, profile, cb) {
         // console.log(profile);
@@ -86,6 +88,10 @@ passport.use(new GoogleStrategy({
     }
 ));
 
+
+// auth google
+app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile'] }));
 
 app.get('/auth/google/secrets',
     passport.authenticate('google', { failureRedirect: '/login' }),
@@ -99,11 +105,6 @@ app.get('/auth/google/secrets',
 app.get("/", (req, res) => {
     res.render("home");
 });
-
-
-// auth google
-app.get('/auth/google',
-    passport.authenticate('google', { scope: ['profile'] }));
 
 
 app.get("/login", (req, res) => {
